@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+  namespace: health-app
+  labels:
+    app: notification
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+        - name: notification
+          image: us-central1-docker.pkg.dev/cloudcomputing-cw-bda/cloud-computing/notification-service:1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-uri-secret-notification
+                  key: MONGODB_URI

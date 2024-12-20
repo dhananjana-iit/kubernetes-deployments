@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doctor
+  namespace: health-app
+  labels:
+    app: doctor
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: doctor
+  template:
+    metadata:
+      labels:
+        app: doctor
+    spec:
+      containers:
+        - name: doctor
+          image: us-central1-docker.pkg.dev/cloudcomputing-cw-bda/cloud-computing/doctor:1.1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-uri-secret-doctor
+                  key: MONGODB_URI

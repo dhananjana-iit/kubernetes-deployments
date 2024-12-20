@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointment
+  namespace: health-app
+  labels:
+    app: appointment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: appointment
+  template:
+    metadata:
+      labels:
+        app: appointment
+    spec:
+      containers:
+        - name: appointment
+          image: us-central1-docker.pkg.dev/cloudcomputing-cw-bda/cloud-computing/appointment:1.0.4
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-uri-secret-appointment
+                  key: MONGODB_URI
